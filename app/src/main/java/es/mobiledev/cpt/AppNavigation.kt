@@ -22,6 +22,7 @@ import es.mobiledev.cpt.ui.screen.testNavigation.TestScreen
 import es.mobiledev.feature.articledetail.screen.ArticleDetailScreen
 import es.mobiledev.feature.home.screen.HomeScreen
 import es.mobiledev.feature.launcher.screen.LauncherScreen
+import es.mobiledev.feature.webscreen.screen.WebScreen
 import es.mobiledev.navigation.AppScreens
 import es.mobiledev.navigation.util.getCurrentSelectedModule
 
@@ -92,12 +93,23 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
             }
             composable<AppScreens.Test> { navBackStackEntry ->
                 currentScreen = navBackStackEntry.toRoute<AppScreens.Test>()
-                TestScreen()
+                TestScreen(
+                    onNavigateToWebScreen = { url ->
+                        navController.navigate(AppScreens.WebScreen(url = url))
+                    }
+                )
             }
 
             composable<AppScreens.ArticleDetail> { navBackStackEntry ->
                 currentScreen = navBackStackEntry.toRoute<AppScreens.ArticleDetail>()
                 ArticleDetailScreen()
+            }
+
+            composable<AppScreens.WebScreen> { navBackStackEntry ->
+                currentScreen = navBackStackEntry.toRoute<AppScreens.WebScreen>()
+                WebScreen(
+                    onNavigateBack = navController::popBackStack
+                )
             }
         }
     }

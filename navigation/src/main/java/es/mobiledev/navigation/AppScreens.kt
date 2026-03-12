@@ -48,4 +48,15 @@ sealed interface AppScreens {
         override val hasBottomBar: Boolean = true
     }
     //endregion
+
+    //region WEB SCREEN
+    @Serializable
+    data class WebScreen(
+        val url: String
+    ) : AppScreens {
+        override val module: NavigationModule = NavigationModule.TEST
+        override val hasTopBar: Boolean = true
+        override val hasBottomBar: Boolean = true
+    }
+    //endregion
 }
