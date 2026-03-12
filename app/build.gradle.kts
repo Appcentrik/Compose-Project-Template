@@ -42,11 +42,13 @@ tasks.named("preBuild").configure {
 }
 
 dependencies {
+    implementation(projects.common)
     implementation(projects.commonAndroid)
     implementation(projects.navigation)
     implementation(projects.feature.home)
     implementation(projects.feature.launcher)
     implementation(projects.feature.articledetail)
+    implementation(projects.feature.webscreen)
 
     implementation(projects.data.local)
     implementation(projects.data.repository)
