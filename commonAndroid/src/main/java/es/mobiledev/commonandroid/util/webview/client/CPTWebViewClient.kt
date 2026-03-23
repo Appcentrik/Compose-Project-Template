@@ -9,50 +9,37 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.webkit.WebViewAssetLoader
 import es.mobiledev.commonandroid.util.webview.ASSETS_PATH
-import es.mobiledev.commonandroid.util.webview.state.CPTWebViewClientState
-import es.mobiledev.commonandroid.util.webview.state.WebViewClientState
-
-/**
- * CPT design utility
- *
- * rememberCPTWebViewClient creates and remembers a [CPTWebViewClient] instance.
- *
- * This function provides a convenient way to manage the state of a WebView within a Composable.
- *
- * @return a remembered instance of [CPTWebViewClient]
- */
-@Composable
-fun rememberCPTWebViewClient(): CPTWebViewClient {
-    val state = remember { CPTWebViewClientState() }
-    return remember { object : CPTWebViewClient(state) {} }
-}
+import es.mobiledev.commonandroid.util.webview.state.CPTWebViewClientListener
 
 /**
  * CPT design utility
  *
  * CPTWebViewClient is a custom [WebViewClient] that tracks the loading state of a WebView.
  *
- * This class integrates with [WebViewClientState] to notify about page loading events,
- * errors, and navigation history updates. It also supports local asset loading.
+ * This class integrates with [CPTWebViewClientListener] to notify about page loading events,
+ * errors, and navigation history updates. It also supports local asset loading via [WebViewAssetLoader].
  *
- * @param state the [WebViewClientState] used to track the status of the WebView
- * @param assetLoader an optional [WebViewAssetLoader] for handling local asset requests
+ * @param assetLoader an optional [WebViewAssetLoader] for handling local asset requests.
+ * If null, local asset interception is disabled.
+ *
+ * @see WebViewClient
+ * @see CPTWebViewClientListener
+ * @see WebViewAssetLoader
  */
 abstract class CPTWebViewClient(
-    val state: WebViewClientState,
     internal var assetLoader: WebViewAssetLoader? = null
 ) : WebViewClient() {
+    private var listener: CPTWebViewClientListener? = null
+
     override fun onPageStarted(
         view: WebView?,
         url: String?,
         favicon: Bitmap?
     ) {
         super.onPageStarted(view, url, favicon)
-        state.setLoadingState()
+        listener?.onLoading()
     }
 
     override fun onPageFinished(
@@ -60,7 +47,7 @@ abstract class CPTWebViewClient(
         url: String?
     ) {
         super.onPageFinished(view, url)
-        state.setFinishedState()
+        listener?.onFinish()
     }
 
     override fun doUpdateVisitedHistory(
@@ -69,7 +56,7 @@ abstract class CPTWebViewClient(
         isReload: Boolean
     ) {
         super.doUpdateVisitedHistory(view, url, isReload)
-        state.canGoBack = view?.canGoBack() == true
+        listener?.onCanGoBack(view?.canGoBack() == true)
     }
 
     override fun onReceivedError(
@@ -79,9 +66,7 @@ abstract class CPTWebViewClient(
     ) {
         super.onReceivedError(view, request, error)
         if (request?.isForMainFrame == true) {
-            state.setErrorState(
-                debugMsg = "Error: ${error?.errorCode} -> ${error?.description}"
-            )
+            listener?.onError("Error: ${error?.errorCode} -> ${error?.description}")
         }
     }
 
@@ -92,9 +77,7 @@ abstract class CPTWebViewClient(
     ) {
         super.onReceivedHttpError(view, request, errorResponse)
         if (request?.isForMainFrame == true) {
-            state.setErrorState(
-                debugMsg = "Http Error: ${errorResponse?.statusCode} -> ${errorResponse?.reasonPhrase}"
-            )
+            listener?.onError("Http Error: ${errorResponse?.statusCode} -> ${errorResponse?.reasonPhrase}")
         }
     }
 
@@ -104,9 +87,7 @@ abstract class CPTWebViewClient(
         error: SslError?
     ) {
         super.onReceivedSslError(view, handler, error)
-        state.setErrorState(
-            debugMsg = "SSL Error: ${error?.primaryError} -> ${error?.url}"
-        )
+        listener?.onError("SSL Error: ${error?.primaryError} -> ${error?.url}")
     }
 
     override fun shouldInterceptRequest(
@@ -115,6 +96,10 @@ abstract class CPTWebViewClient(
     ): WebResourceResponse? =
         request?.url?.let { assetLoader?.shouldInterceptRequest(it) }
             ?: super.shouldInterceptRequest(view, request)
+
+    fun setListener(listener: CPTWebViewClientListener) {
+        this.listener = listener
+    }
 
     fun setAssetLoader(context: Context) {
         assetLoader =

@@ -1,5 +1,6 @@
 package es.mobiledev.commonandroid.ui.base
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import es.mobiledev.commonandroid.theme.BlueGrey50
 import es.mobiledev.commonandroid.ui.component.navigationBar.CptNavigationBar
 import es.mobiledev.navigation.NavigationModule
 import es.mobiledev.commonandroid.util.EmptyComposable
@@ -46,13 +48,18 @@ fun BaseScreen(
     Scaffold(
         topBar = topBar,
         bottomBar = bottomBar,
-        modifier = modifier.fillMaxSize()
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(BlueGrey50)
     ) { paddingValues ->
+        content(paddingValues)
         if (isLoading) {
             Box(
                 modifier =
                     Modifier
                         .fillMaxSize()
+                        .background(BlueGrey50)
                         .padding(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
@@ -60,8 +67,6 @@ fun BaseScreen(
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
-        } else {
-            content(paddingValues)
         }
     }
 }
