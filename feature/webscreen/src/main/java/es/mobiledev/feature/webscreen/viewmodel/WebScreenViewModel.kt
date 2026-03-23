@@ -1,5 +1,6 @@
 package es.mobiledev.feature.webscreen.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -60,7 +61,8 @@ class WebScreenViewModel
         }
 
         override fun onError(errorMsg: String) {
-            TODO("Not yet implemented")
+            // TODO: Handle error
+            Log.e("WebScreenViewmodel", errorMsg)
         }
 
         override fun onCanGoBack(canGoBack: Boolean) {
