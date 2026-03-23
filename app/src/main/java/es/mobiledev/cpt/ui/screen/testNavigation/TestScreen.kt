@@ -23,7 +23,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.mobiledev.common.EMPTY_STRING
 import es.mobiledev.commonandroid.R
 import es.mobiledev.commonandroid.ui.base.BaseScreen
+import es.mobiledev.commonandroid.ui.component.webview.component.CPTWebView
 import es.mobiledev.commonandroid.util.webview.INDEX_HTML_PATH
+import es.mobiledev.commonandroid.util.webview.WebViewContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,6 +73,22 @@ fun TestScreen(
                     ) {
                         Text(it.first)
                     }
+                }
+                item {
+                    CPTWebView(
+                        content =
+                            WebViewContent.Html(
+                                data =
+                                    """
+                                    <p>I am an embedded HTML code!</p>
+                                    <img src="https://play-lh.googleusercontent.com/y_-anVKl3ID25Je02J1dseqlAm41N8pwI-Gad7aDxPIPss3d7hUYF8c08SNCtwSPW5g" 
+                                    width="104" 
+                                    height="142" 
+                                    alt="Hello Android!"
+                                    >
+                                    """.trimIndent()
+                            )
+                    )
                 }
             }
         }
