@@ -1,24 +1,26 @@
 package es.mobiledev.commonandroid.util.webview
 
 import android.webkit.WebView
+import es.mobiledev.common.ENCODING_UTF8
+import es.mobiledev.common.MIME_TYPE_HTML
+import es.mobiledev.commonandroid.util.extensions.prepareHtml
 import es.mobiledev.commonandroid.util.extensions.toWebViewAssetUrl
 
 /**
  * CPT design utility
  *
- * Loads raw HTML data into the WebView.
+ * Loads an HTML string into the WebView, automatically injecting the necessary
+ * HTML structure (viewport meta tag, image styles, etc.) if not already present.
  *
- * This extension function simplifies loading HTML strings by providing default values
- * for base URL, MIME type, and encoding.
- *
- * @param data the HTML string to be loaded
+ * @param data the HTML string to be loaded, with or without full HTML structure
+ * @see String.prepareHtml
  */
 fun WebView.loadHtml(data: String) {
     loadDataWithBaseURL(
         null,
-        data,
-        "text/html",
-        "UTF-8",
+        data.prepareHtml(),
+        MIME_TYPE_HTML,
+        ENCODING_UTF8,
         null
     )
 }

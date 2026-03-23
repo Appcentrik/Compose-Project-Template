@@ -21,3 +21,14 @@ const val ALPHA_HALF = 0.5F
 const val INDEX_OFFSET = 1
 const val ONE_ELEMENT = 1
 const val OUT_OF_BOUNDS_INDEX = -1
+
+// region REGEX
+const val HTML_REGEX =
+    "</?[a-zA-Z][a-zA-Z0-9]*(\\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(\\s*=\\s*(\"[^\"]*\"|'[^']*'|[^\\s'\">=]+))?)*\\s*/?>"
+
+// endregion
+
+// region ENCODING
+const val MIME_TYPE_HTML = "text/html"
+const val ENCODING_UTF8 = "UTF-8"
+// endregion
