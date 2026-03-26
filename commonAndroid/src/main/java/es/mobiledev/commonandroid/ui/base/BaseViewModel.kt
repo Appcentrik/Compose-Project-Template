@@ -1,6 +1,8 @@
 package es.mobiledev.commonandroid.ui.base
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import es.mobiledev.common.error.AppError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -58,4 +60,11 @@ abstract class BaseViewModel<T> : ViewModel() {
             currentUiState.copy(data = block(currentUiState.data), isLoading = false)
         }
     }
+
+    /**
+     * Logs an [AppError] using the simple name of the current class as the tag.
+     *
+     * @param error The [AppError] to be logged.
+     */
+    fun ViewModel.logAppError(error: AppError) = Log.e(this::class.java.simpleName, error.message, error.throwable)
 }

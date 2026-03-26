@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.common)
     implementation(projects.data.source)
     implementation(projects.domain.gateway)
     implementation(projects.domain.model)

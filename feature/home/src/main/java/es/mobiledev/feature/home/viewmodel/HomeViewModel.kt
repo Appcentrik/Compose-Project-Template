@@ -3,6 +3,7 @@ package es.mobiledev.feature.home.viewmodel
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import es.mobiledev.common.response.onResult
 import es.mobiledev.commonandroid.ui.base.BaseViewModel
 import es.mobiledev.commonandroid.ui.base.UiState
 import es.mobiledev.commonandroid.util.getCurrentEpochMilli
@@ -30,7 +31,8 @@ class HomeViewModel
         private val saveLastOpenTimeUseCase: SaveLastOpenTimeUseCase,
         private val getLastOpenTimeUseCase: GetLastOpenTimeUseCase,
     ) : BaseViewModel<HomeUiState>() {
-        override val uiState: MutableStateFlow<UiState<HomeUiState>> = MutableStateFlow(value = UiState(data = HomeUiState()))
+        override val uiState: MutableStateFlow<UiState<HomeUiState>> =
+            MutableStateFlow(value = UiState(data = HomeUiState()))
 
         init {
             viewModelScope.launch(Dispatchers.IO) {
@@ -45,13 +47,18 @@ class HomeViewModel
         }
 
         private suspend fun getArticles() =
-            getArticlesUseCase(limit = 5L, offset = 0L).collectLatest { response ->
-                uiState.successState { currentUiState ->
-                    currentUiState.copy(
-                        articles = response.results
-                    )
+            getArticlesUseCase(limit = 5L, offset = 0L).onResult(
+                onSuccess = {
+                    uiState.successState { currentUiState ->
+                        currentUiState.copy(
+                            articles = it.results,
+                        )
+                    }
+                },
+                onError = { error ->
+                    logAppError(error)
                 }
-            }
+            )
 
         private suspend fun saveLastOpenTime() = saveLastOpenTimeUseCase(timeInMillis = getCurrentEpochMilli())
 
@@ -63,27 +70,30 @@ class HomeViewModel
 
         fun getFavoriteArticles() =
             viewModelScope.launch(Dispatchers.IO) {
-                getFavoriteArticlesUseCase().collectLatest { favoriteArticles ->
-                    uiState.updateState { currentUiState ->
-                        currentUiState.copy(
-                            favoriteArticles = favoriteArticles,
-                        )
-                    }
-                }
+                getFavoriteArticlesUseCase().onResult(
+                    onSuccess = { articles ->
+                        uiState.successState { currentUiState ->
+                            currentUiState.copy(
+                                favoriteArticles = articles,
+                            )
+                        }
+                    },
+                    onError = { error ->
+                        logAppError(error)
+                    },
+                )
             }
 
         fun onFavoriteClick(
             article: ArticleBo,
-            isFavorite: Boolean
+            isFavorite: Boolean,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    saveOrRemoveFavoriteArticleUseCase(article = article, isFavorite = isFavorite)
-                    getFavoriteArticles()
-                } catch (e: Exception) {
-                    // TODO: Pending to handle errors
-                    Log.e("HomeViewModel", "Error saving favorite article", e)
-                }
+                saveOrRemoveFavoriteArticleUseCase(
+                    article = article,
+                    isFavorite = isFavorite,
+                )
+                getFavoriteArticles()
             }
         }
     }
