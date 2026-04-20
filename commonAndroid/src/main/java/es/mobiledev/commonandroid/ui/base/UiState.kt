@@ -1,5 +1,7 @@
 package es.mobiledev.commonandroid.ui.base
 
+import es.mobiledev.commonandroid.ui.component.error.UiError
+
 /**
  * Represents the state of the UI.
  *
@@ -10,4 +12,5 @@ package es.mobiledev.commonandroid.ui.base
 data class UiState<T>(
     val data: T,
     val isLoading: Boolean = false,
+    val uiError: UiError = UiError.None,
 )

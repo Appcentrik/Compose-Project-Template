@@ -35,8 +35,15 @@ fun CPTTheme(
                 }
             }
 
-            darkTheme -> darkColorScheme()
-            else -> lightColorScheme()
+            darkTheme ->
+                darkColorScheme(
+                    scrim = BlueGrey970,
+                )
+
+            else ->
+                lightColorScheme(
+                    scrim = BlueGrey970,
+                )
         }
     MaterialTheme(
         colorScheme = colorScheme,

@@ -6,6 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.mobiledev.common.response.onResult
 import es.mobiledev.commonandroid.ui.base.BaseViewModel
 import es.mobiledev.commonandroid.ui.base.UiState
+import es.mobiledev.commonandroid.ui.component.error.UiError
+import es.mobiledev.commonandroid.ui.component.error.toUiError
 import es.mobiledev.commonandroid.util.getCurrentEpochMilli
 import es.mobiledev.domain.model.article.ArticleBo
 import es.mobiledev.domain.usecase.article.GetArticlesUseCase
@@ -46,7 +48,7 @@ class HomeViewModel
             getLastOpenTime()
         }
 
-        private suspend fun getArticles() =
+        private suspend fun getArticles() {
             getArticlesUseCase(limit = 5L, offset = 0L).onResult(
                 onSuccess = {
                     uiState.successState { currentUiState ->
@@ -56,9 +58,18 @@ class HomeViewModel
                     }
                 },
                 onError = { error ->
+                    uiState.errorState(
+                        uiError =
+                            error.toUiError<UiError.SnackBar> {
+                                viewModelScope.launch {
+                                    fetchData()
+                                }
+                            },
+                    )
                     logAppError(error)
-                }
+                },
             )
+        }
 
         private suspend fun saveLastOpenTime() = saveLastOpenTimeUseCase(timeInMillis = getCurrentEpochMilli())
 
@@ -68,7 +79,7 @@ class HomeViewModel
                 saveLastOpenTime()
             }
 
-        fun getFavoriteArticles() =
+        fun getFavoriteArticles() {
             viewModelScope.launch(Dispatchers.IO) {
                 getFavoriteArticlesUseCase().onResult(
                     onSuccess = { articles ->
@@ -79,10 +90,18 @@ class HomeViewModel
                         }
                     },
                     onError = { error ->
+                        uiState.errorState(
+                            UiError.Screen(
+                                title = "Oops, it looks like there was a problem",
+                                message = "An unexpected error occurred. Please try again later.",
+                                action = { getFavoriteArticles() },
+                            ),
+                        )
                         logAppError(error)
                     },
                 )
             }
+        }
 
         fun onFavoriteClick(
             article: ArticleBo,

@@ -10,6 +10,7 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.mobiledev.commonandroid.theme.CPTTheme
 import es.mobiledev.commonandroid.ui.base.BaseScreen
+import es.mobiledev.commonandroid.ui.component.error.UiError
 import es.mobiledev.feature.home.component.HomeScreenContent
 import es.mobiledev.feature.home.viewmodel.HomeViewModel
 
@@ -21,12 +22,15 @@ fun HomeScreen(
     val uiState by viewModel.getUiState().collectAsStateWithLifecycle()
 
     LifecycleStartEffect(Unit) {
-        viewModel.getFavoriteArticles()
+        if (uiState.uiError is UiError.None) {
+            viewModel.getFavoriteArticles()
+        }
         onStopOrDispose { /* no-op */ }
     }
 
     BaseScreen(
         isLoading = uiState.isLoading,
+        uiError = uiState.uiError,
     ) { paddingValues ->
         HomeScreenContent(
             uiState = uiState.data,

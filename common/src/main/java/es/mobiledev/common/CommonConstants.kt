@@ -21,3 +21,8 @@ const val ALPHA_HALF = 0.5F
 const val INDEX_OFFSET = 1
 const val ONE_ELEMENT = 1
 const val OUT_OF_BOUNDS_INDEX = -1
+
+const val ZERO_FLOAT = 0f
+const val ONE_FLOAT = 1f
+
+const val SNACKBAR_TRANSITION_DELAY = 5000

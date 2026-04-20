@@ -25,6 +25,8 @@ val BlueGrey960Light = Color(0xFF031118)
 val BlueGrey970Light = Color(0xFF020A0D)
 val BlueGrey1000Light = Color(0xFF000000)
 
+val Red0Light = Color(0xFFFF0000)
+
 // endregion
 
 // region Dark colors
@@ -47,6 +49,8 @@ val BlueGrey950Dark = Color(0xFFBAC5CA)
 val BlueGrey960Dark = Color(0xFFCED6D9)
 val BlueGrey970Dark = Color(0xFFF0F2F4)
 val BlueGrey1000Dark = Color(0xFFFFFFFF)
+
+val Red0Dark = Color(0xFFFF0000)
 
 // endregion
 
@@ -164,6 +168,13 @@ val BlueGrey1000
         getColorForTheme(
             lightColor = BlueGrey1000Light,
             darkColor = BlueGrey1000Dark,
+        )
+
+val Red0
+    @Composable get() =
+        getColorForTheme(
+            lightColor = Red0Light,
+            darkColor = Red0Dark,
         )
 
 // endregion

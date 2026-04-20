@@ -3,6 +3,7 @@ package es.mobiledev.commonandroid.ui.base
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import es.mobiledev.common.error.AppError
+import es.mobiledev.commonandroid.ui.component.error.UiError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,7 +47,10 @@ abstract class BaseViewModel<T> : ViewModel() {
      */
     fun MutableStateFlow<UiState<T>>.loadingState() {
         update { currentUiState ->
-            currentUiState.copy(isLoading = true)
+            currentUiState.copy(
+                isLoading = true,
+                uiError = UiError.None,
+            )
         }
     }
 
@@ -57,7 +61,25 @@ abstract class BaseViewModel<T> : ViewModel() {
      */
     fun MutableStateFlow<UiState<T>>.successState(block: (T) -> T) {
         update { currentUiState ->
-            currentUiState.copy(data = block(currentUiState.data), isLoading = false)
+            currentUiState.copy(
+                data = block(currentUiState.data),
+                isLoading = false,
+                uiError = UiError.None,
+            )
+        }
+    }
+
+    /**
+     * Sets the UI state to an error state and stops loading.
+     *
+     * @param uiError The [UiError] to be displayed in the UI.
+     */
+    fun MutableStateFlow<UiState<T>>.errorState(uiError: UiError) {
+        update { currentUiState ->
+            currentUiState.copy(
+                uiError = uiError,
+                isLoading = false,
+            )
         }
     }
 
