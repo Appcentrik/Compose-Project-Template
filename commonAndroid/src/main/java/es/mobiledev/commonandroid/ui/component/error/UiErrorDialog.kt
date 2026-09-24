@@ -11,9 +11,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import es.mobiledev.commonandroid.R
@@ -49,14 +49,14 @@ fun UiErrorDialog(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(dimensionResource(R.dimen.error_dialog__padding)),
             ) {
                 IconButton(
                     onClick = onDismiss,
                     modifier =
                         Modifier
                             .align(Alignment.End)
-                            .size(16.dp),
+                            .size(dimensionResource(R.dimen.error_dialog__close_size)),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),
@@ -68,14 +68,14 @@ fun UiErrorDialog(
                     uiError = uiError,
                     modifier =
                         Modifier
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = dimensionResource(R.dimen.error_dialog__padding)),
                 )
             }
         }
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun Preview() {
     CPTTheme {
@@ -83,8 +83,8 @@ private fun Preview() {
             UiErrorDialog(
                 uiError =
                     UiError.Dialog(
-                        title = "Oops, it looks like there was a problem",
-                        message = "An unexpected error occurred. Please try again later.",
+                        title = R.string.error_generic_title,
+                        message = R.string.error_generic_message,
                         action = {},
                     ),
                 onDismiss = {},

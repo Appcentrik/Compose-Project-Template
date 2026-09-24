@@ -1,6 +1,7 @@
 package es.mobiledev.commonandroid.ui.component.error
 
 import es.mobiledev.common.error.AppError
+import es.mobiledev.commonandroid.R
 
 inline fun <reified E : UiError> AppError.toUiError(
     noinline action: (() -> Unit)? = null,
@@ -8,10 +9,10 @@ inline fun <reified E : UiError> AppError.toUiError(
     val (title, message) =
         when (this) {
             is AppError.NetworkError ->
-                "No internet connection" to "Please check your connection and try again."
+                R.string.error_network_title to R.string.error_network_message
 
             else ->
-                "Something went wrong" to "We're having trouble loading this content. Please try again."
+                R.string.error_generic_title to R.string.error_generic_message
         }
 
     return when (E::class) {

@@ -10,13 +10,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import es.mobiledev.commonandroid.R
 import es.mobiledev.commonandroid.theme.BlueGrey0
 import es.mobiledev.commonandroid.theme.BlueGrey800
 import es.mobiledev.commonandroid.theme.BlueGrey930
+import es.mobiledev.commonandroid.theme.CPTTheme
 import es.mobiledev.commonandroid.theme.Red0
 import es.mobiledev.commonandroid.theme.titleLargeRobotoSemiBold
 import es.mobiledev.commonandroid.theme.titleSmallRobotoRegular
@@ -27,14 +30,14 @@ fun UiErrorContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.error_content__outer_spacing)),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier =
             modifier
                 .fillMaxWidth(),
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.error_content__inner_spacing)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Icon(
@@ -43,11 +46,11 @@ fun UiErrorContent(
                 contentDescription = null,
             )
             Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.error_content__text_spacing)),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = uiError.title,
+                    text = stringResource(uiError.title),
                     style =
                         titleLargeRobotoSemiBold(
                             color = BlueGrey930,
@@ -55,7 +58,7 @@ fun UiErrorContent(
                         ),
                 )
                 Text(
-                    text = uiError.message,
+                    text = stringResource(uiError.message),
                     style =
                         titleSmallRobotoRegular(
                             color = BlueGrey800,
@@ -73,8 +76,23 @@ fun UiErrorContent(
                         contentColor = BlueGrey0,
                     ),
             ) {
-                Text(text = "Confirm")
+                Text(text = stringResource(R.string.error_action_confirm))
             }
         }
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewUiErrorContent() {
+    CPTTheme {
+        UiErrorContent(
+            uiError =
+                UiError.Screen(
+                    title = R.string.error_generic_title,
+                    message = R.string.error_generic_message,
+                    action = {},
+                ),
+        )
     }
 }

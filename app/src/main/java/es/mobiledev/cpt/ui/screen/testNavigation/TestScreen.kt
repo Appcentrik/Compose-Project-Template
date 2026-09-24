@@ -55,66 +55,66 @@ fun TestScreen() {
                 onClick = {
                     showError(
                         UiError.SnackBar(
-                            title = "Snackbar error",
-                            message = "A recoverable error occurred.",
+                            title = R.string.error_test_snackbar_title,
+                            message = R.string.error_test_snackbar_message,
                             action = { uiError = UiError.None },
                         ),
                     )
                 },
             ) {
-                Text("Show Snackbar")
+                Text(stringResource(R.string.error_test_show_snackbar))
             }
             Button(
                 onClick = {
                     showError(
                         UiError.Dialog(
-                            title = "Dialog error",
-                            message = "The operation could not be completed.",
+                            title = R.string.error_test_dialog_title,
+                            message = R.string.error_test_dialog_message,
                             action = { uiError = UiError.None },
                         ),
                     )
                 },
             ) {
-                Text("Show Dialog")
+                Text(stringResource(R.string.error_test_show_dialog))
             }
             Button(
                 onClick = {
                     showError(
                         UiError.Sheet(
-                            title = "Sheet error",
-                            message = "Additional error information is available.",
+                            title = R.string.error_test_sheet_title,
+                            message = R.string.error_test_sheet_message,
                             action = { uiError = UiError.None },
                         ),
                     )
                 },
             ) {
-                Text("Show Bottom Sheet")
+                Text(stringResource(R.string.error_test_show_sheet))
             }
             Button(
                 onClick = {
                     showError(
                         UiError.Screen(
-                            title = "Screen error",
-                            message = "This screen cannot display its content.",
+                            title = R.string.error_test_screen_title,
+                            message = R.string.error_test_screen_message,
                             action = { uiError = UiError.None },
                         ),
                     )
                 },
             ) {
-                Text("Show Full-screen Error")
+                Text(stringResource(R.string.error_test_show_screen))
             }
             Button(
                 onClick = {
                     showError(
                         UiError.Embedded(
-                            title = "Embedded error",
-                            message = "This section could not be loaded.",
+                            title = R.string.error_test_embedded_title,
+                            message = R.string.error_test_embedded_message,
                             action = { uiError = UiError.None },
                         ),
                     )
                 },
             ) {
-                Text("Show Embedded Error")
+                Text(stringResource(R.string.error_test_show_embedded))
             }
         }
     }

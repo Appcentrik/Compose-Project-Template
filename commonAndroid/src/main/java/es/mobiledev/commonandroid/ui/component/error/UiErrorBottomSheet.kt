@@ -11,8 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
+import es.mobiledev.commonandroid.R
 import es.mobiledev.commonandroid.theme.BlueGrey400
 import es.mobiledev.commonandroid.theme.BlueGrey50
 import es.mobiledev.commonandroid.theme.CPTTheme
@@ -54,7 +55,7 @@ fun UiErrorBottomSheet(
                 uiError = uiError,
                 modifier =
                     Modifier
-                        .padding(all = 16.dp),
+                        .padding(all = dimensionResource(R.dimen.error_dialog__padding)),
             )
         }
     }
@@ -68,8 +69,8 @@ private fun Preview() {
             UiErrorBottomSheet(
                 uiError =
                     UiError.Sheet(
-                        title = "Oops, it looks like there was a problem",
-                        message = "An unexpected error occurred. Please try again later.",
+                        title = R.string.error_generic_title,
+                        message = R.string.error_generic_message,
                         action = {},
                     ),
                 onDismiss = {},

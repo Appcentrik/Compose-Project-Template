@@ -11,4 +11,30 @@
     <string name="continue_reading">Continue reading</string>
     <string name="take_a_look_at_this_article">Take a look at this article: %s</string>
     <string name="share_via">Share via</string>
+
+    <!-- region ERROR -->
+    <string name="error_action_confirm">Confirm</string>
+    <string name="error_generic_title">Something went wrong</string>
+    <string name="error_generic_message">We are having trouble loading this content. Please try again.</string>
+    <string name="error_network_title">No internet connection</string>
+    <string name="error_network_message">Please check your connection and try again.</string>
+    <string name="error_preview_title">Unable to load content</string>
+    <string name="error_preview_message">Please try again.</string>
+    <string name="error_test_snackbar_title">Snackbar error</string>
+    <string name="error_test_snackbar_message">A recoverable error occurred.</string>
+    <string name="error_test_dialog_title">Dialog error</string>
+    <string name="error_test_dialog_message">The operation could not be completed.</string>
+    <string name="error_test_sheet_title">Sheet error</string>
+    <string name="error_test_sheet_message">Additional error information is available.</string>
+    <string name="error_test_screen_title">Screen error</string>
+    <string name="error_test_screen_message">This screen cannot display its content.</string>
+    <string name="error_test_embedded_title">Embedded error</string>
+    <string name="error_test_embedded_message">This section could not be loaded.</string>
+    <string name="error_test_show_snackbar">Show Snackbar</string>
+    <string name="error_test_show_dialog">Show Dialog</string>
+    <string name="error_test_show_sheet">Show Bottom Sheet</string>
+    <string name="error_test_show_screen">Show Full-screen Error</string>
+    <string name="error_test_show_embedded">Show Embedded Error</string>
+    <string name="empty_string" translatable="false"></string>
+    <!-- endregion -->
 </resources>

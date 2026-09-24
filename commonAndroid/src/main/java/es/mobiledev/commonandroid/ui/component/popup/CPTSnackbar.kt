@@ -27,13 +27,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
 import es.mobiledev.common.DEFAULT_COMPONENT_WEIGHT
 import es.mobiledev.common.EMPTY_STRING
 import es.mobiledev.common.ONE_FLOAT
 import es.mobiledev.common.SNACKBAR_TRANSITION_DELAY
 import es.mobiledev.common.ZERO_FLOAT
+import es.mobiledev.commonandroid.R
 import es.mobiledev.commonandroid.theme.BlueGrey300
 import es.mobiledev.commonandroid.theme.BlueGrey50
 import es.mobiledev.commonandroid.theme.BlueGrey800
@@ -91,7 +92,7 @@ fun CPTSnackbar(
     ) {
         Snackbar(
             actionOnNewLine = true,
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(dimensionResource(R.dimen.error_snackbar__shape)),
             containerColor = BlueGrey300,
             content = {
                 CPTSnackbarContent(
@@ -109,7 +110,7 @@ fun CPTSnackbar(
                         transitionState.targetState = false
                     },
                 ).takeIf { actionLabel != null && action != null },
-            modifier = modifier.padding(8.dp),
+            modifier = modifier.padding(dimensionResource(R.dimen.error_snackbar__padding)),
         )
     }
 }
@@ -125,14 +126,14 @@ private fun CPTSnackbarContent(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.error_snackbar__content_spacing)),
         modifier =
             modifier
                 .fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.error_snackbar__row_spacing)),
             modifier =
                 Modifier
                     .fillMaxWidth(),
@@ -141,7 +142,7 @@ private fun CPTSnackbarContent(
                 safeLeadingContent()
             }
             Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.error_snackbar__text_spacing)),
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier.weight(DEFAULT_COMPONENT_WEIGHT),
             ) {
@@ -169,7 +170,7 @@ private fun CPTSnackbarContent(
                 modifier =
                     Modifier
                         .fillMaxWidth(safeProgress)
-                        .height(3.dp)
+                        .height(dimensionResource(R.dimen.error_snackbar__progress_height))
                         .clip(CircleShape)
                         .background(BlueGrey800),
             )
@@ -205,8 +206,8 @@ private fun Preview() {
                 Modifier
                     .fillMaxSize()
                     .background(BlueGrey50)
-                    .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(dimensionResource(R.dimen.dp16)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.dp16))
         ) {
             CPTSnackbar(
                 title = "Auto-dismiss",

@@ -4,8 +4,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import es.mobiledev.commonandroid.R
+import es.mobiledev.commonandroid.theme.CPTTheme
 import es.mobiledev.commonandroid.theme.Red0
 import es.mobiledev.commonandroid.ui.component.popup.CPTSnackbar
 
@@ -15,9 +17,9 @@ fun UiErrorSnackbar(
     modifier: Modifier = Modifier,
 ) {
     CPTSnackbar(
-        title = uiError.title,
-        message = uiError.message,
-        actionLabel = "Confirm",
+        title = stringResource(uiError.title),
+        message = stringResource(uiError.message),
+        actionLabel = stringResource(R.string.error_action_confirm),
         action = uiError.action,
         leadingContent = {
             Icon(
@@ -26,19 +28,21 @@ fun UiErrorSnackbar(
                 contentDescription = null,
             )
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun Preview() {
-    UiErrorSnackbar(
-        uiError =
-            UiError.SnackBar(
-                title = "Oops, it looks like there was a problem",
-                message = "An unexpected error occurred. Please try again later.",
-                action = {},
-            ),
-    )
+    CPTTheme {
+        UiErrorSnackbar(
+            uiError =
+                UiError.SnackBar(
+                    title = R.string.error_generic_title,
+                    message = R.string.error_generic_message,
+                    action = {},
+                ),
+        )
+    }
 }

@@ -1,45 +1,45 @@
 package es.mobiledev.commonandroid.ui.component.error
 
-import es.mobiledev.common.EMPTY_STRING
-
-// enum class UiError {
-//    DIALOG, SHEET, SCREEN, SNACK_BAR, EMBEDDED
-// }
+import androidx.annotation.StringRes
+import es.mobiledev.commonandroid.R
 
 sealed class UiError(
-    open val title: String,
-    open val message: String,
+    @param:StringRes open val title: Int,
+    @param:StringRes open val message: Int,
     open val action: (() -> Unit)? = null,
 ) {
     data class Dialog(
-        override val title: String,
-        override val message: String,
+        @param:StringRes override val title: Int,
+        @param:StringRes override val message: Int,
         override val action: (() -> Unit)? = null,
     ) : UiError(title, message, action)
 
     data class Sheet(
-        override val title: String,
-        override val message: String,
+        @param:StringRes override val title: Int,
+        @param:StringRes override val message: Int,
         override val action: (() -> Unit)? = null,
     ) : UiError(title, message, action)
 
     data class Screen(
-        override val title: String,
-        override val message: String,
+        @param:StringRes override val title: Int,
+        @param:StringRes override val message: Int,
         override val action: (() -> Unit)? = null,
     ) : UiError(title, message, action)
 
     data class SnackBar(
-        override val title: String,
-        override val message: String,
+        @param:StringRes override val title: Int,
+        @param:StringRes override val message: Int,
         override val action: (() -> Unit)? = null,
     ) : UiError(title, message, action)
 
     data class Embedded(
-        override val title: String,
-        override val message: String,
+        @param:StringRes override val title: Int,
+        @param:StringRes override val message: Int,
         override val action: (() -> Unit)? = null,
     ) : UiError(title, message, action)
 
-    data object None : UiError(EMPTY_STRING, EMPTY_STRING)
+    data object None : UiError(
+        title = R.string.empty_string,
+        message = R.string.empty_string,
+    )
 }

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import es.mobiledev.commonandroid.R
 import es.mobiledev.commonandroid.theme.BlueGrey50
 import es.mobiledev.commonandroid.theme.BlueGrey700
 import es.mobiledev.commonandroid.theme.CPTTheme
@@ -160,8 +161,8 @@ private fun Preview() {
             },
             uiError =
                 UiError.SnackBar(
-                    title = "Oops, it looks like there was a problem",
-                    message = "An unexpected error occurred. Please try again later.",
+                    title = R.string.error_generic_title,
+                    message = R.string.error_generic_message,
                     action = {},
                 ),
         ) { paddingValues ->

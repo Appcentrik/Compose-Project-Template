@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.mobiledev.common.response.AsyncResultException
 import es.mobiledev.common.response.onResult
+import es.mobiledev.commonandroid.R
 import es.mobiledev.commonandroid.ui.base.BaseViewModel
 import es.mobiledev.commonandroid.ui.base.UiState
 import es.mobiledev.commonandroid.ui.component.error.UiError
@@ -94,8 +95,8 @@ class HomeViewModel
                     onError = { error ->
                         uiState.errorState(
                             UiError.Screen(
-                                title = "Oops, it looks like there was a problem",
-                                message = "An unexpected error occurred. Please try again later.",
+                                title = R.string.error_generic_title,
+                                message = R.string.error_generic_message,
                                 action = { getFavoriteArticles() },
                             ),
                         )
