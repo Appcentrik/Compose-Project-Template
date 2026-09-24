@@ -23,6 +23,7 @@ import es.mobiledev.commonandroid.theme.BlueGrey700
 import es.mobiledev.commonandroid.theme.CPTTheme
 import es.mobiledev.commonandroid.ui.component.error.UiError
 import es.mobiledev.commonandroid.ui.component.error.UiErrorBottomSheet
+import es.mobiledev.commonandroid.ui.component.error.UiErrorEmbedded
 import es.mobiledev.commonandroid.ui.component.error.UiErrorDialog
 import es.mobiledev.commonandroid.ui.component.error.UiErrorScreen
 import es.mobiledev.commonandroid.ui.component.error.UiErrorSnackbar
@@ -40,6 +41,7 @@ import es.mobiledev.navigation.NavigationModule
  * @param isLoading a flag that indicates if the screen is loading
  * @param topBar top app bar of the screen, typically a [TopAppBar]
  * @param bottomBar bottom bar of the screen, typically a [NavigationBar]
+ * @param onUiErrorDismiss callback invoked when a dismissible error is closed
  * @param content content of the screen. The lambda receives a [PaddingValues] that should be
  *   applied to the content root via [Modifier.padding] to properly offset top and bottom bars.
  *   If using [Modifier.verticalScroll], apply this modifier to the child of the scroll, and not
@@ -53,6 +55,7 @@ fun BaseScreen(
     uiError: UiError = UiError.None,
     topBar: @Composable () -> Unit = EmptyComposable,
     bottomBar: @Composable () -> Unit = EmptyComposable,
+    onUiErrorDismiss: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit = {},
 ) {
     Scaffold(
@@ -85,10 +88,45 @@ fun BaseScreen(
                     }
                 } else {
                     when (uiError) {
-                        is UiError.Dialog -> UiErrorDialog(uiError, onDismiss = {})
+                        is UiError.Dialog -> {
+                            UiErrorDialog(
+                                uiError =
+                                    uiError.copy(
+                                        action =
+                                            uiError.action?.let { errorAction ->
+                                                {
+                                                    onUiErrorDismiss()
+                                                    errorAction()
+                                                }
+                                            },
+                                    ),
+                                onDismiss = onUiErrorDismiss,
+                            )
+                        }
                         is UiError.Screen -> UiErrorScreen(uiError)
-                        is UiError.Sheet -> UiErrorBottomSheet(uiError, onDismiss = {})
-                        is UiError.Embedded -> TODO()
+                        is UiError.Sheet -> {
+                            UiErrorBottomSheet(
+                                uiError =
+                                    uiError.copy(
+                                        action =
+                                            uiError.action?.let { errorAction ->
+                                                {
+                                                    onUiErrorDismiss()
+                                                    errorAction()
+                                                }
+                                            },
+                                    ),
+                                onDismiss = onUiErrorDismiss,
+                            )
+                        }
+                        is UiError.Embedded ->
+                            UiErrorEmbedded(
+                                uiError = uiError,
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .padding(paddingValues),
+                            )
                         else -> { // no-op
                         }
                     }

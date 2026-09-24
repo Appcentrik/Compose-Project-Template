@@ -31,6 +31,7 @@ fun HomeScreen(
     BaseScreen(
         isLoading = uiState.isLoading,
         uiError = uiState.uiError,
+        onUiErrorDismiss = viewModel::clearError,
     ) { paddingValues ->
         HomeScreenContent(
             uiState = uiState.data,

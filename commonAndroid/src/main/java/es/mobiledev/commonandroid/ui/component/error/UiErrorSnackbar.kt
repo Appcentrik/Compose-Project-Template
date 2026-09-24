@@ -18,7 +18,7 @@ fun UiErrorSnackbar(
         title = uiError.title,
         message = uiError.message,
         actionLabel = "Confirm",
-        // action = uiError.action,
+        action = uiError.action,
         leadingContent = {
             Icon(
                 painter = painterResource(R.drawable.ic_info),

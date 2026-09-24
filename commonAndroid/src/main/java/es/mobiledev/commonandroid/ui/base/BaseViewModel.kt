@@ -83,6 +83,13 @@ abstract class BaseViewModel<T> : ViewModel() {
         }
     }
 
+    /** Clears the current UI error without changing the rest of the state. */
+    fun clearError() {
+        uiState.update { currentUiState ->
+            currentUiState.copy(uiError = UiError.None)
+        }
+    }
+
     /**
      * Logs an [AppError] using the simple name of the current class as the tag.
      *

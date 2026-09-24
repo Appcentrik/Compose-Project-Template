@@ -22,6 +22,8 @@ fun ArticleDetailScreen() {
 
     BaseScreen(
         isLoading = uiState.isLoading,
+        uiError = uiState.uiError,
+        onUiErrorDismiss = viewModel::clearError,
         bottomBar = {
             uiState.data.article?.url?.let { safeUrl ->
                 ArticleDetailBottomBar(

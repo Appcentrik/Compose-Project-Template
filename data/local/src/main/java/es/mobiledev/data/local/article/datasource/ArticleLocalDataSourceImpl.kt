@@ -12,9 +12,15 @@ class ArticleLocalDataSourceImpl(
 ) : ArticleLocalDataSource {
     private val articleDao = roomDatabase.articleDao()
 
-    override suspend fun saveFavoriteArticle(article: ArticleBo) = articleDao.saveFavoriteArticle(article.toDbo())
+    override suspend fun saveFavoriteArticle(article: ArticleBo) =
+        catchLocalError {
+            articleDao.saveFavoriteArticle(article.toDbo())
+        }
 
-    override suspend fun removeFavoriteArticle(article: ArticleBo) = articleDao.removeFavoriteArticle(article.toDbo())
+    override suspend fun removeFavoriteArticle(article: ArticleBo) =
+        catchLocalError {
+            articleDao.removeFavoriteArticle(article.toDbo())
+        }
 
     override suspend fun getFavoriteArticles(): List<ArticleBo> =
         catchLocalError {

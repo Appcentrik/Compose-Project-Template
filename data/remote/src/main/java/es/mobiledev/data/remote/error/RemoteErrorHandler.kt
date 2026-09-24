@@ -3,12 +3,15 @@ package es.mobiledev.data.remote.error
 import com.squareup.moshi.JsonDataException
 import es.mobiledev.common.error.AppError
 import es.mobiledev.common.response.AsyncResultException
+import kotlinx.coroutines.CancellationException
 import retrofit2.HttpException
 import java.io.IOException
 
 suspend fun <T> catchRemoteError(call: suspend () -> T): T =
     try {
         call()
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         throw AsyncResultException(manageException(e))
     }

@@ -3,6 +3,7 @@ package es.mobiledev.feature.home.viewmodel
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import es.mobiledev.common.response.AsyncResultException
 import es.mobiledev.common.response.onResult
 import es.mobiledev.commonandroid.ui.base.BaseViewModel
 import es.mobiledev.commonandroid.ui.base.UiState
@@ -81,6 +82,7 @@ class HomeViewModel
 
         fun getFavoriteArticles() {
             viewModelScope.launch(Dispatchers.IO) {
+                uiState.loadingState()
                 getFavoriteArticlesUseCase().onResult(
                     onSuccess = { articles ->
                         uiState.successState { currentUiState ->
@@ -108,11 +110,20 @@ class HomeViewModel
             isFavorite: Boolean,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                saveOrRemoveFavoriteArticleUseCase(
-                    article = article,
-                    isFavorite = isFavorite,
-                )
-                getFavoriteArticles()
+                try {
+                    saveOrRemoveFavoriteArticleUseCase(
+                        article = article,
+                        isFavorite = isFavorite,
+                    )
+                    getFavoriteArticles()
+                } catch (error: AsyncResultException) {
+                    uiState.errorState(
+                        error.error.toUiError<UiError.SnackBar> {
+                            onFavoriteClick(article, isFavorite)
+                        },
+                    )
+                    logAppError(error.error)
+                }
             }
         }
     }

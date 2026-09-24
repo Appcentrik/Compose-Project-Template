@@ -4,9 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import es.mobiledev.common.response.AsyncResultException
 import es.mobiledev.common.response.onResult
 import es.mobiledev.commonandroid.ui.base.BaseViewModel
 import es.mobiledev.commonandroid.ui.base.UiState
+import es.mobiledev.commonandroid.ui.component.error.UiError
+import es.mobiledev.commonandroid.ui.component.error.toUiError
 import es.mobiledev.domain.model.article.ArticleBo
 import es.mobiledev.domain.usecase.article.GetArticleByIdUseCase
 import es.mobiledev.domain.usecase.article.IsArticleFavoriteUseCase
@@ -45,7 +48,7 @@ class ArticleDetailViewModel
         private suspend fun isArticleFavorite(id: Long) =
             isArticleFavoriteUseCase(id = id).onResult(
                 onSuccess = {
-                    uiState.successState { currentUiState ->
+                    uiState.updateState { currentUiState ->
                         currentUiState.copy(
                             isFavorite = it
                         )
@@ -66,6 +69,13 @@ class ArticleDetailViewModel
                     }
                 },
                 onError = { error ->
+                    uiState.errorState(
+                        error.toUiError<UiError.Screen> {
+                            viewModelScope.launch {
+                                fetchData()
+                            }
+                        },
+                    )
                     logAppError(error)
                 }
             )
@@ -75,14 +85,23 @@ class ArticleDetailViewModel
             isFavorite: Boolean
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                saveOrRemoveFavoriteArticleUseCase(
-                    article = article,
-                    isFavorite = isFavorite
-                )
-                uiState.successState { currentUiState ->
-                    currentUiState.copy(
-                        isFavorite = !isFavorite
+                try {
+                    saveOrRemoveFavoriteArticleUseCase(
+                        article = article,
+                        isFavorite = isFavorite
                     )
+                    uiState.successState { currentUiState ->
+                        currentUiState.copy(
+                            isFavorite = !isFavorite
+                        )
+                    }
+                } catch (error: AsyncResultException) {
+                    uiState.errorState(
+                        error.error.toUiError<UiError.SnackBar> {
+                            onFavoriteClick(article, isFavorite)
+                        },
+                    )
+                    logAppError(error.error)
                 }
             }
         }
