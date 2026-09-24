@@ -90,13 +90,14 @@ class ArticleDetailViewModel
                         article = article,
                         isFavorite = isFavorite
                     )
-                    uiState.successState { currentUiState ->
+                    uiState.updateState { currentUiState ->
                         currentUiState.copy(
                             isFavorite = !isFavorite
                         )
                     }
+                    uiState.updateErrorState(UiError.None)
                 } catch (error: AsyncResultException) {
-                    uiState.errorState(
+                    uiState.updateErrorState(
                         error.error.toUiError<UiError.SnackBar> {
                             onFavoriteClick(article, isFavorite)
                         },

@@ -46,11 +46,15 @@ class HomeViewModel
 
         suspend fun fetchData() {
             uiState.loadingState()
-            getArticles()
-            getLastOpenTime()
+            getArticles {
+                viewModelScope.launch {
+                    getLastOpenTime()
+                }
+                getFavoriteArticles()
+            }
         }
 
-        private suspend fun getArticles() {
+        private suspend fun getArticles(onSuccess: () -> Unit) {
             getArticlesUseCase(limit = 5L, offset = 0L).onResult(
                 onSuccess = {
                     uiState.successState { currentUiState ->
@@ -58,6 +62,7 @@ class HomeViewModel
                             articles = it.results,
                         )
                     }
+                    onSuccess()
                 },
                 onError = { error ->
                     uiState.errorState(
@@ -83,17 +88,24 @@ class HomeViewModel
 
         fun getFavoriteArticles() {
             viewModelScope.launch(Dispatchers.IO) {
-                uiState.loadingState()
+                uiState.updateState { currentUiState ->
+                    currentUiState.copy(isSubmitting = true)
+                }
                 getFavoriteArticlesUseCase().onResult(
                     onSuccess = { articles ->
-                        uiState.successState { currentUiState ->
+                        uiState.updateState { currentUiState ->
                             currentUiState.copy(
                                 favoriteArticles = articles,
+                                isSubmitting = false,
                             )
                         }
+                        uiState.updateErrorState(UiError.None)
                     },
                     onError = { error ->
-                        uiState.errorState(
+                        uiState.updateState { currentUiState ->
+                            currentUiState.copy(isSubmitting = false)
+                        }
+                        uiState.updateErrorState(
                             UiError.Screen(
                                 title = R.string.error_generic_title,
                                 message = R.string.error_generic_message,
@@ -111,6 +123,9 @@ class HomeViewModel
             isFavorite: Boolean,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
+                uiState.updateState { currentUiState ->
+                    currentUiState.copy(isSubmitting = true)
+                }
                 try {
                     saveOrRemoveFavoriteArticleUseCase(
                         article = article,
@@ -118,7 +133,10 @@ class HomeViewModel
                     )
                     getFavoriteArticles()
                 } catch (error: AsyncResultException) {
-                    uiState.errorState(
+                    uiState.updateState { currentUiState ->
+                        currentUiState.copy(isSubmitting = false)
+                    }
+                    uiState.updateErrorState(
                         error.error.toUiError<UiError.SnackBar> {
                             onFavoriteClick(article, isFavorite)
                         },

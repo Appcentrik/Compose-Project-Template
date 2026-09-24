@@ -42,6 +42,13 @@ abstract class BaseViewModel<T> : ViewModel() {
         }
     }
 
+    /** Updates only the error value, preserving the loading and data state. */
+    fun MutableStateFlow<UiState<T>>.updateErrorState(uiError: UiError) {
+        update { currentUiState ->
+            currentUiState.copy(uiError = uiError)
+        }
+    }
+
     /**
      * Sets the UI state to loading.
      */
