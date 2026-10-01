@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import es.mobiledev.data.local.article.dbo.ArticleDbo
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ArticleDao {
@@ -16,7 +17,7 @@ interface ArticleDao {
     suspend fun removeFavoriteArticle(article: ArticleDbo)
 
     @Query("SELECT * FROM articles")
-    suspend fun getFavoriteArticles(): List<ArticleDbo>
+    fun getFavoriteArticles(): Flow<List<ArticleDbo>>
 
     @Query("SELECT * FROM articles WHERE id = :articleId")
     suspend fun getFavoriteArticleById(articleId: Long): ArticleDbo?

@@ -15,7 +15,10 @@ fun ArticleResponseDto.toBo() =
         count = count ?: -1L,
         next = next ?: "",
         previous = previous ?: "",
-        results = results?.map { it.toBo() } ?: emptyList()
+        results =
+            results?.mapNotNull { articleDto ->
+                articleDto.id?.let { articleDto.toBo() }
+            } ?: emptyList()
     )
 
 fun ArticleDto.toBo() =

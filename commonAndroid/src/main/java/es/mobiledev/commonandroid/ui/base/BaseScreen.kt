@@ -3,6 +3,7 @@ package es.mobiledev.commonandroid.ui.base
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
@@ -63,9 +64,21 @@ fun BaseScreen(
         topBar = topBar,
         bottomBar = bottomBar,
         containerColor = backgroundColor,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         snackbarHost = {
             if (uiError is UiError.SnackBar) {
-                UiErrorSnackbar(uiError)
+                UiErrorSnackbar(
+                    uiError =
+                        uiError.copy(
+                            action =
+                                uiError.action?.let { errorAction ->
+                                    {
+                                        onUiErrorDismiss()
+                                        errorAction()
+                                    }
+                                },
+                        ),
+                )
             }
         },
         modifier =

@@ -2,6 +2,7 @@ package es.mobiledev.data.repository.article
 
 import es.mobiledev.common.response.AsyncResult
 import es.mobiledev.common.response.localResponse
+import es.mobiledev.common.response.localResponseFlow
 import es.mobiledev.common.response.remoteResponse
 import es.mobiledev.data.source.article.ArticleLocalDataSource
 import es.mobiledev.data.source.article.ArticleRemoteDataSource
@@ -30,7 +31,7 @@ class ArticleRepository(
         }
 
     override suspend fun getFavoriteArticles(): Flow<AsyncResult<List<ArticleBo>>> =
-        localResponse {
+        localResponseFlow {
             local.getFavoriteArticles()
         }
 

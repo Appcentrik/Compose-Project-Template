@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import es.mobiledev.data.remote.BuildConfig
 import es.mobiledev.data.remote.article.ArticleRemoteDataSourceImpl
 import es.mobiledev.data.remote.article.ArticleWs
 import es.mobiledev.data.remote.util.BASE_URL
@@ -22,7 +23,7 @@ object RemoteModule {
     @Provides
     fun interceptorProvider(): Interceptor =
         HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         }
 
     @Provides

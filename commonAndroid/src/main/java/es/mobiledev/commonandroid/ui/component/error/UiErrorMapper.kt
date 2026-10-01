@@ -11,8 +11,17 @@ inline fun <reified E : UiError> AppError.toUiError(
             is AppError.NetworkError ->
                 R.string.error_network_title to R.string.error_network_message
 
-            else ->
-                R.string.error_generic_title to R.string.error_generic_message
+            is AppError.ServerError ->
+                R.string.error_server_title to R.string.error_server_message
+
+            is AppError.ParseError ->
+                R.string.error_parse_title to R.string.error_parse_message
+
+            is AppError.LocalError ->
+                R.string.error_local_title to R.string.error_local_message
+
+            is AppError.UnknownError ->
+                R.string.error_unknown_title to R.string.error_unknown_message
         }
 
     return when (E::class) {

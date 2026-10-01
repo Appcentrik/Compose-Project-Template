@@ -18,6 +18,14 @@
     <string name="error_generic_message">We are having trouble loading this content. Please try again.</string>
     <string name="error_network_title">No internet connection</string>
     <string name="error_network_message">Please check your connection and try again.</string>
+    <string name="error_server_title">Server error</string>
+    <string name="error_server_message">The server returned an error. Please try again later.</string>
+    <string name="error_parse_title">Unexpected response</string>
+    <string name="error_parse_message">We could not process the server response. Please try again.</string>
+    <string name="error_local_title">Local error</string>
+    <string name="error_local_message">Something went wrong accessing local data. Please try again.</string>
+    <string name="error_unknown_title">Unexpected error</string>
+    <string name="error_unknown_message">An unexpected error occurred. Please try again.</string>
     <string name="error_preview_title">Unable to load content</string>
     <string name="error_preview_message">Please try again.</string>
     <string name="error_test_snackbar_title">Snackbar error</string>

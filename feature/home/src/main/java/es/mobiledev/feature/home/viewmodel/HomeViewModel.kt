@@ -20,8 +20,10 @@ import es.mobiledev.domain.usecase.preferences.SaveLastOpenTimeUseCase
 import es.mobiledev.feature.home.state.HomeUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.Date
 import javax.inject.Inject
 
@@ -38,10 +40,13 @@ class HomeViewModel
         override val uiState: MutableStateFlow<UiState<HomeUiState>> =
             MutableStateFlow(value = UiState(data = HomeUiState()))
 
+        private val favoriteMutex = Mutex()
+
         init {
             viewModelScope.launch(Dispatchers.IO) {
                 fetchData()
             }
+            observeFavoriteArticles()
         }
 
         suspend fun fetchData() {
@@ -50,7 +55,6 @@ class HomeViewModel
                 viewModelScope.launch {
                     getLastOpenTime()
                 }
-                getFavoriteArticles()
             }
         }
 
@@ -80,37 +84,35 @@ class HomeViewModel
 
         private suspend fun saveLastOpenTime() = saveLastOpenTimeUseCase(timeInMillis = getCurrentEpochMilli())
 
-        private suspend fun getLastOpenTime() =
-            getLastOpenTimeUseCase().collectLatest { lastOpenTime ->
-                Log.d("HomeViewModel", "Last open time: ${Date(lastOpenTime)}")
-                saveLastOpenTime()
-            }
+        private suspend fun getLastOpenTime() {
+            val lastOpenTime = getLastOpenTimeUseCase().first()
+            Log.d("HomeViewModel", "Last open time: ${Date(lastOpenTime)}")
+            saveLastOpenTime()
+        }
 
-        fun getFavoriteArticles() {
+        private fun observeFavoriteArticles() {
             viewModelScope.launch(Dispatchers.IO) {
                 uiState.updateState { currentUiState ->
-                    currentUiState.copy(isSubmitting = true)
+                    currentUiState.copy(isLoadingFavorites = true)
                 }
                 getFavoriteArticlesUseCase().onResult(
                     onSuccess = { articles ->
                         uiState.updateState { currentUiState ->
                             currentUiState.copy(
                                 favoriteArticles = articles,
-                                isSubmitting = false,
+                                isLoadingFavorites = false,
                             )
                         }
                         uiState.updateErrorState(UiError.None)
                     },
                     onError = { error ->
                         uiState.updateState { currentUiState ->
-                            currentUiState.copy(isSubmitting = false)
+                            currentUiState.copy(isLoadingFavorites = false)
                         }
                         uiState.updateErrorState(
-                            UiError.Screen(
-                                title = R.string.error_generic_title,
-                                message = R.string.error_generic_message,
-                                action = { getFavoriteArticles() },
-                            ),
+                            error.toUiError<UiError.SnackBar> {
+                                observeFavoriteArticles()
+                            },
                         )
                         logAppError(error)
                     },
@@ -123,25 +125,44 @@ class HomeViewModel
             isFavorite: Boolean,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                uiState.updateState { currentUiState ->
-                    currentUiState.copy(isSubmitting = true)
-                }
-                try {
-                    saveOrRemoveFavoriteArticleUseCase(
-                        article = article,
-                        isFavorite = isFavorite,
-                    )
-                    getFavoriteArticles()
-                } catch (error: AsyncResultException) {
+                favoriteMutex.withLock {
                     uiState.updateState { currentUiState ->
-                        currentUiState.copy(isSubmitting = false)
+                        currentUiState.copy(isTogglingFavorite = true)
                     }
-                    uiState.updateErrorState(
-                        error.error.toUiError<UiError.SnackBar> {
-                            onFavoriteClick(article, isFavorite)
-                        },
-                    )
-                    logAppError(error.error)
+                    try {
+                        saveOrRemoveFavoriteArticleUseCase(
+                            article = article,
+                            isFavorite = isFavorite,
+                        )
+                        uiState.updateState { currentUiState ->
+                            currentUiState.copy(isTogglingFavorite = false)
+                        }
+                        uiState.updateErrorState(UiError.None)
+                    } catch (error: AsyncResultException) {
+                        uiState.updateState { currentUiState ->
+                            currentUiState.copy(isTogglingFavorite = false)
+                        }
+                        uiState.updateErrorState(
+                            error.error.toUiError<UiError.SnackBar> {
+                                onFavoriteClick(article, isFavorite)
+                            },
+                        )
+                        logAppError(error.error)
+                    } catch (error: Throwable) {
+                        uiState.updateState { currentUiState ->
+                            currentUiState.copy(isTogglingFavorite = false)
+                        }
+                        uiState.updateErrorState(
+                            UiError.SnackBar(
+                                title = R.string.error_unknown_title,
+                                message = R.string.error_unknown_message,
+                                action = {
+                                    onFavoriteClick(article, isFavorite)
+                                },
+                            ),
+                        )
+                        Log.e("HomeViewModel", "Unexpected error toggling favorite", error)
+                    }
                 }
             }
         }

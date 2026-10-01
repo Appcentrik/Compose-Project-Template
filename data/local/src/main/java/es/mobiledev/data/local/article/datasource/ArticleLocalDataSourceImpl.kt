@@ -6,6 +6,8 @@ import es.mobiledev.data.local.article.dao.toDbo
 import es.mobiledev.data.local.article.error.catchLocalError
 import es.mobiledev.data.source.article.ArticleLocalDataSource
 import es.mobiledev.domain.model.article.ArticleBo
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class ArticleLocalDataSourceImpl(
     roomDatabase: AppRoomDatabase,
@@ -22,9 +24,9 @@ class ArticleLocalDataSourceImpl(
             articleDao.removeFavoriteArticle(article.toDbo())
         }
 
-    override suspend fun getFavoriteArticles(): List<ArticleBo> =
+    override suspend fun getFavoriteArticles(): Flow<List<ArticleBo>> =
         catchLocalError {
-            articleDao.getFavoriteArticles().map { it.toBo() }
+            articleDao.getFavoriteArticles().map { list -> list.map { it.toBo() } }
         }
 
     override suspend fun isArticleFavorite(id: Long): Boolean =

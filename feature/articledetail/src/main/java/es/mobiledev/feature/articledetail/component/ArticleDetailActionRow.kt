@@ -28,6 +28,7 @@ import es.mobiledev.domain.model.article.mockListArticles
 fun ArticleDetailActionRow(
     article: ArticleBo,
     isFavorite: Boolean,
+    isTogglingFavorite: Boolean = false,
     onFavoriteClick: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -65,6 +66,7 @@ fun ArticleDetailActionRow(
         )
         IconButton(
             onClick = onFavoriteClick,
+            enabled = !isTogglingFavorite,
             colors =
                 IconButtonDefaults.iconButtonColors(
                     contentColor =

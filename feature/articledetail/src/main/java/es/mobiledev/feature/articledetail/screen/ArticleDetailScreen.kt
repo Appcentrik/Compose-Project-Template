@@ -36,6 +36,7 @@ fun ArticleDetailScreen() {
             ArticleDetailScreenContent(
                 article = safeArticle,
                 isFavorite = uiState.data.isFavorite,
+                isTogglingFavorite = uiState.data.isTogglingFavorite,
                 onFavoriteClick = {
                     viewModel.onFavoriteClick(
                         article = safeArticle,

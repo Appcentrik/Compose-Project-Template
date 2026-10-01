@@ -17,6 +17,7 @@ import es.mobiledev.domain.model.article.mockListArticles
 fun ArticleDetailScreenContent(
     article: ArticleBo,
     isFavorite: Boolean,
+    isTogglingFavorite: Boolean = false,
     onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -36,6 +37,7 @@ fun ArticleDetailScreenContent(
             ArticleDetailActionRow(
                 article = article,
                 isFavorite = isFavorite,
+                isTogglingFavorite = isTogglingFavorite,
                 onFavoriteClick = onFavoriteClick
             )
         }
