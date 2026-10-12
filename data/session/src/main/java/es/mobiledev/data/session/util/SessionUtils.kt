@@ -3,9 +3,12 @@ package es.mobiledev.data.session.util
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 
 /**
  * Saves a preference to the DataStore.
@@ -32,7 +35,13 @@ suspend fun <T> DataStore<Preferences>.getPreference(
     defaultValue: T
 ): T =
     this.data
-        .map { prefs ->
+        .catch { throwable ->
+            if (throwable is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw throwable
+            }
+        }.map { prefs ->
             prefs[key] ?: defaultValue
         }.first()
 

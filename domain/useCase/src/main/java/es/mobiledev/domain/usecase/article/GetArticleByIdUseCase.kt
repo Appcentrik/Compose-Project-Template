@@ -1,13 +1,14 @@
 package es.mobiledev.domain.usecase.article
 
+import es.mobiledev.common.response.AsyncResult
+import kotlinx.coroutines.flow.Flow
 import es.mobiledev.domain.gateway.article.ArticleGateway
 import es.mobiledev.domain.model.article.ArticleBo
-import kotlinx.coroutines.flow.Flow
 
 interface GetArticleByIdUseCase {
     suspend operator fun invoke(
         id: Long,
-    ): Flow<ArticleBo>
+    ): Flow<AsyncResult<ArticleBo>>
 }
 
 class GetArticleByIdUseCaseImpl(
@@ -15,5 +16,5 @@ class GetArticleByIdUseCaseImpl(
 ) : GetArticleByIdUseCase {
     override suspend fun invoke(
         id: Long,
-    ): Flow<ArticleBo> = articleGateway.getArticleById(id = id)
+    ): Flow<AsyncResult<ArticleBo>> = articleGateway.getArticleById(id = id)
 }

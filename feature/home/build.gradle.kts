@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.common)
     implementation(projects.domain.model)
     implementation(projects.domain.useCase)
 
@@ -44,6 +45,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(platform(libs.androidx.compose.bom))

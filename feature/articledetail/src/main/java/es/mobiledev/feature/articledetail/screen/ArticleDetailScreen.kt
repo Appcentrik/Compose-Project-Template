@@ -18,10 +18,10 @@ import es.mobiledev.feature.articledetail.viewmodel.ArticleDetailViewModel
 @Composable
 fun ArticleDetailScreen() {
     val viewModel: ArticleDetailViewModel = hiltViewModel()
-    val uiState by viewModel.getUiState().collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     BaseScreen(
-        isLoading = uiState.isLoading,
+        status = uiState.status,
         bottomBar = {
             uiState.data.article?.url?.let { safeUrl ->
                 ArticleDetailBottomBar(
@@ -34,6 +34,7 @@ fun ArticleDetailScreen() {
             ArticleDetailScreenContent(
                 article = safeArticle,
                 isFavorite = uiState.data.isFavorite,
+                isTogglingFavorite = uiState.data.isTogglingFavorite,
                 onFavoriteClick = {
                     viewModel.onFavoriteClick(
                         article = safeArticle,

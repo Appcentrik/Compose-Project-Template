@@ -31,6 +31,8 @@ android {
 }
 
 dependencies {
+    // api, not implementation: AsyncResult is the return type of every gateway method
+    api(projects.common)
     implementation(projects.domain.model)
 
     implementation(libs.androidx.core.ktx)

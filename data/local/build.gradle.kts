@@ -36,6 +36,7 @@ ksp {
 }
 
 dependencies {
+    implementation(projects.common)
     implementation(projects.domain.model)
     implementation(projects.data.source)
 

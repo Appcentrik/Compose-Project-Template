@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import es.mobiledev.common.util.AppDispatchers
 import es.mobiledev.data.local.AppRoomDatabase
 import es.mobiledev.data.local.article.datasource.ArticleLocalDataSourceImpl
 import es.mobiledev.data.source.article.ArticleLocalDataSource
@@ -19,5 +20,8 @@ object LocalModule {
 
     @Provides
     @Singleton
-    fun articleLocalDataSourceProvider(roomDatabase: AppRoomDatabase) = ArticleLocalDataSourceImpl(roomDatabase) as ArticleLocalDataSource
+    fun articleLocalDataSourceProvider(
+        roomDatabase: AppRoomDatabase,
+        appDispatchers: AppDispatchers,
+    ) = ArticleLocalDataSourceImpl(roomDatabase, appDispatchers) as ArticleLocalDataSource
 }
