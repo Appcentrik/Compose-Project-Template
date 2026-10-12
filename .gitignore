@@ -17,7 +17,6 @@ out/
 *.hprof
 
 # generated tests
-androidTest/
 build/
 
 # gradle
