@@ -42,6 +42,7 @@ tasks.named("preBuild").configure {
 }
 
 dependencies {
+    implementation(projects.common)
     implementation(projects.commonAndroid)
     implementation(projects.navigation)
     implementation(projects.feature.home)

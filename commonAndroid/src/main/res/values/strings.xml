@@ -11,4 +11,59 @@
     <string name="continue_reading">Continue reading</string>
     <string name="take_a_look_at_this_article">Take a look at this article: %s</string>
     <string name="share_via">Share via</string>
+
+    <!-- region ERROR -->
+    <string name="error_action_retry">Retry</string>
+    <string name="error_action_confirm">Confirm</string>
+    <string name="dialog_action_close">Close</string>
+    <string name="error_generic_title">Something went wrong</string>
+    <string name="error_generic_message">We are having trouble loading this content. Please try again.</string>
+    <string name="error_network_title">No internet connection</string>
+    <string name="error_network_message">Please check your connection and try again.</string>
+    <string name="error_server_title">Server error</string>
+    <string name="error_server_message">The server returned an error. Please try again later.</string>
+    <string name="error_timeout_title">The server took too long</string>
+    <string name="error_timeout_message">The connection timed out before we got a response. Please try again.</string>
+    <string name="error_unauthorized_title">Not allowed</string>
+    <string name="error_unauthorized_message">You do not have permission to see this content.</string>
+    <string name="error_not_found_title">Content not found</string>
+    <string name="error_not_found_message">This content is no longer available.</string>
+    <string name="error_parse_title">Unexpected response</string>
+    <string name="error_parse_message">We could not process the server response. Please try again.</string>
+    <string name="error_local_title">Local error</string>
+    <string name="error_local_message">Something went wrong accessing local data. Please try again.</string>
+    <string name="error_unknown_title">Unexpected error</string>
+    <string name="error_unknown_message">An unexpected error occurred. Please try again.</string>
+    <string name="error_test_snackbar_title">Snackbar error</string>
+    <string name="error_test_snackbar_message">A recoverable error occurred.</string>
+    <string name="error_test_dialog_title">Dialog error</string>
+    <string name="error_test_dialog_message">The operation could not be completed.</string>
+    <string name="error_test_sheet_title">Sheet error</string>
+    <string name="error_test_sheet_message">Additional error information is available.</string>
+    <string name="error_test_screen_title">Screen error</string>
+    <string name="error_test_screen_message">This screen cannot display its content.</string>
+    <string name="error_test_embedded_title">Embedded error</string>
+    <string name="error_test_embedded_message">This section could not be loaded.</string>
+    <string name="error_test_show_snackbar">Show Snackbar</string>
+    <string name="error_test_show_dialog">Show Dialog</string>
+    <string name="error_test_show_sheet">Show Bottom Sheet</string>
+    <string name="error_test_show_screen">Show Full-screen Error</string>
+    <string name="error_test_show_embedded">Show Embedded Error</string>
+
+    <string name="error_test_section_presentation">Presentation (NetworkError)</string>
+    <string name="error_test_section_type">AppError type (as Snackbar)</string>
+    <string name="error_test_section_lifecycle">Lifecycle</string>
+    <string name="error_test_section_counters">Counters</string>
+    <string name="error_test_lifecycle_loading">Loading</string>
+    <string name="error_test_lifecycle_success">Success (must keep the error)</string>
+    <string name="error_test_lifecycle_snackbar_auto">Snackbar without action</string>
+    <string name="error_test_lifecycle_snackbar_sequence">Two snackbars in a row</string>
+    <string name="error_test_lifecycle_dismiss">Dismiss</string>
+    <string name="error_test_lifecycle_dismiss_action">Dismiss with action</string>
+    <string name="error_test_counter_actions">Error actions run: %1$d</string>
+    <string name="error_test_counter_snackbars">Snackbars shown: %1$d</string>
+    <string name="error_test_counter_reset">Reset counters</string>
+    <string name="error_test_navigation_smoke">Navigation smoke test</string>
+    <string name="empty_string" translatable="false"></string>
+    <!-- endregion -->
 </resources>

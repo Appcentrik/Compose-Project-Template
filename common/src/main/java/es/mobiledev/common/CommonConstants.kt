@@ -24,3 +24,8 @@ const val OUT_OF_BOUNDS_INDEX = -1
 
 const val ZERO_FLOAT = 0f
 const val ONE_FLOAT = 1f
+
+// region ERROR
+const val SNACKBAR_WITHOUT_ACTION_TIMEOUT_MS = 5_000
+const val SNACKBAR_WITH_ACTION_TIMEOUT_MS = 7_500
+// endregion

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- region DIMENSIONS -->
+    <dimen name="dp1">1dp</dimen>
+    <dimen name="dp3">3dp</dimen>
+    <dimen name="dp6">6dp</dimen>
     <dimen name="dp8">8dp</dimen>
     <dimen name="dp12">12dp</dimen>
     <dimen name="dp16">16dp</dimen>
     <dimen name="dp24">24dp</dimen>
+    <dimen name="dp28">28dp</dimen>
+    <dimen name="dp32">32dp</dimen>
     <dimen name="dp52">52dp</dimen>
     <dimen name="dp200">200dp</dimen>
+    <dimen name="dp308">308dp</dimen>
+    <dimen name="dp372">372dp</dimen>
+    <!-- endregion -->
 
     <!-- region NAVIGATION BAR -->
     <dimen name="navigation_bar__item_height">@dimen/dp52</dimen>
@@ -26,16 +35,48 @@
     <!-- region ARTICLE DETAIL SCREEN -->
     <dimen name="article_detail_screen__content__vertical_arrangement">@dimen/dp16</dimen>
     <dimen name="article_detail_screen__content__padding">@dimen/dp12</dimen>
-
     <dimen name="article_detail_image__corner_radius">@dimen/dp24</dimen>
-
     <dimen name="article_detail_action_row__icon_button__size">@dimen/dp24</dimen>
     <dimen name="article_detail_action_row__icon__size">@dimen/dp16</dimen>
     <dimen name="article_detail_action_row__spacer_width">@dimen/dp8</dimen>
-
     <dimen name="article_detail_body__vertical_arrangement">@dimen/dp8</dimen>
-
     <dimen name="article_detail_bottom_bar__spacer_width">@dimen/dp8</dimen>
     <!-- endregion -->
 
+    <!-- region CPT DIALOG -->
+    <dimen name="cpt_dialog__margin">@dimen/dp8</dimen>
+    <dimen name="cpt_dialog__padding">@dimen/dp16</dimen>
+    <dimen name="cpt_dialog__max_width">@dimen/dp372</dimen>
+    <dimen name="cpt_dialog__corner_radius">@dimen/dp16</dimen>
+    <dimen name="cpt_dialog__gap">@dimen/dp8</dimen>
+    <dimen name="cpt_dialog__close_size">@dimen/dp24</dimen>
+    <!-- endregion -->
+
+    <!-- region CPT BOTTOM SHEET -->
+    <dimen name="cpt_bottom_sheet__corner_radius">@dimen/dp28</dimen>
+    <!-- endregion -->
+
+    <!-- region CPT SNACKBAR -->
+    <dimen name="cpt_snackbar__shape">@dimen/dp24</dimen>
+    <dimen name="cpt_snackbar__padding">@dimen/dp8</dimen>
+    <dimen name="cpt_snackbar__elevation">@dimen/dp6</dimen>
+    <dimen name="cpt_snackbar__border_width">@dimen/dp1</dimen>
+    <dimen name="cpt_snackbar__content_spacing">@dimen/dp12</dimen>
+    <dimen name="cpt_snackbar__row_spacing">@dimen/dp12</dimen>
+    <dimen name="cpt_snackbar__text_spacing">@dimen/dp8</dimen>
+    <dimen name="cpt_snackbar__progress_height">@dimen/dp3</dimen>
+    <dimen name="cpt_snackbar__progress_padding_bottom">@dimen/dp16</dimen>
+    <!-- endregion -->
+
+    <!-- region ERROR -->
+    <dimen name="error_content__outer_spacing">@dimen/dp24</dimen>
+    <dimen name="error_content__inner_spacing">@dimen/dp16</dimen>
+    <dimen name="error_content__text_spacing">@dimen/dp12</dimen>
+    <dimen name="error_content__icon_size">@dimen/dp32</dimen>
+    <dimen name="error_content__max_width">@dimen/dp308</dimen>
+    <dimen name="error_bottom_sheet__padding_top">@dimen/dp16</dimen>
+    <dimen name="error_bottom_sheet__padding_bottom">@dimen/dp24</dimen>
+    <dimen name="error_bottom_sheet__padding_start">@dimen/dp16</dimen>
+    <dimen name="error_bottom_sheet__padding_end">@dimen/dp16</dimen>
+    <!-- endregion -->
 </resources>
