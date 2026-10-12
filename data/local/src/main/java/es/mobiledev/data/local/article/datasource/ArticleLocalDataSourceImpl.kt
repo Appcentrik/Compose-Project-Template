@@ -3,19 +3,36 @@ package es.mobiledev.data.local.article.datasource
 import es.mobiledev.data.local.AppRoomDatabase
 import es.mobiledev.data.local.article.dao.toBo
 import es.mobiledev.data.local.article.dao.toDbo
+import es.mobiledev.data.local.article.error.catchLocalError
 import es.mobiledev.data.source.article.ArticleLocalDataSource
 import es.mobiledev.domain.model.article.ArticleBo
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class ArticleLocalDataSourceImpl(
     roomDatabase: AppRoomDatabase,
 ) : ArticleLocalDataSource {
     private val articleDao = roomDatabase.articleDao()
 
-    override suspend fun saveFavoriteArticle(article: ArticleBo) = articleDao.saveFavoriteArticle(article.toDbo())
+    override suspend fun saveFavoriteArticle(article: ArticleBo) =
+        catchLocalError {
+            articleDao.saveFavoriteArticle(article.toDbo())
+        }
 
-    override suspend fun removeFavoriteArticle(article: ArticleBo) = articleDao.removeFavoriteArticle(article.toDbo())
+    override suspend fun removeFavoriteArticle(article: ArticleBo) =
+        catchLocalError {
+            articleDao.removeFavoriteArticle(article.toDbo())
+        }
 
-    override suspend fun getFavoriteArticles(): List<ArticleBo> = articleDao.getFavoriteArticles().map { it.toBo() }
+    /**
+     * Not wrapped in `catchLocalError`: this block only builds the Flow, the Room query runs at
+     * collection time. Failures are already mapped to [AppError.LocalError] by `localResultFlow` in
+     * the repository.
+     */
+    override suspend fun getFavoriteArticles(): Flow<List<ArticleBo>> = articleDao.getFavoriteArticles().map { list -> list.map { it.toBo() } }
 
-    override suspend fun isArticleFavorite(id: Long) = articleDao.getFavoriteArticleById(articleId = id) != null
+    override suspend fun isArticleFavorite(id: Long): Boolean =
+        catchLocalError {
+            articleDao.getFavoriteArticleById(articleId = id) != null
+        }
 }

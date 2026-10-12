@@ -34,6 +34,7 @@ import es.mobiledev.domain.model.article.mockListArticles
 fun ArticleItem(
     article: ArticleBo,
     isFavorite: Boolean,
+    isTogglingFavorite: Boolean = false,
     onItemClick: () -> Unit,
     onFavoriteClick: () -> Unit
 ) {
@@ -62,6 +63,7 @@ fun ArticleItem(
             IconButton(
                 modifier = Modifier.size(dimensionResource(R.dimen.article_item__icon_button_height)),
                 onClick = { onFavoriteClick() },
+                enabled = !isTogglingFavorite,
                 colors =
                     IconButtonDefaults.iconButtonColors(
                         contentColor =

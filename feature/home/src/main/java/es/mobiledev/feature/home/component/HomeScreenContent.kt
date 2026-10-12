@@ -6,6 +6,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -21,15 +24,20 @@ fun HomeScreenContent(
     onFavoriteClick: (ArticleBo, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val favoriteIds by remember(uiState.favoriteArticles) {
+        derivedStateOf { uiState.favoriteArticles.map { it.id }.toSet() }
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp)
     ) {
         itemsIndexed(uiState.articles, key = { index, article -> article.id }) { index, article ->
-            val isFavorite = article.id in uiState.favoriteArticles.map { it.id }
+            val isFavorite = article.id in favoriteIds
             ArticleItem(
                 article = article,
                 isFavorite = isFavorite,
+                isTogglingFavorite = uiState.isTogglingFavorite,
                 onItemClick = {
                     onNavigateToDetail(article.id)
                 },

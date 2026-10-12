@@ -32,6 +32,8 @@ android {
 }
 
 dependencies {
+    // api, not implementation: AppError is part of the public signature of UiError.toUiError
+    api(projects.common)
     implementation(projects.domain.model)
 
     implementation(libs.coil.compose)

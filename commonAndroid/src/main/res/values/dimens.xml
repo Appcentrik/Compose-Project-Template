@@ -38,4 +38,18 @@
     <dimen name="article_detail_bottom_bar__spacer_width">@dimen/dp8</dimen>
     <!-- endregion -->
 
+    <!-- region ERROR -->
+    <dimen name="error_content__outer_spacing">@dimen/dp24</dimen>
+    <dimen name="error_content__inner_spacing">@dimen/dp16</dimen>
+    <dimen name="error_content__text_spacing">@dimen/dp12</dimen>
+    <dimen name="error_dialog__padding">@dimen/dp16</dimen>
+    <dimen name="error_dialog__close_size">16dp</dimen>
+    <dimen name="error_snackbar__shape">24dp</dimen>
+    <dimen name="error_snackbar__padding">8dp</dimen>
+    <dimen name="error_snackbar__content_spacing">6dp</dimen>
+    <dimen name="error_snackbar__row_spacing">8dp</dimen>
+    <dimen name="error_snackbar__text_spacing">4dp</dimen>
+    <dimen name="error_snackbar__progress_height">3dp</dimen>
+    <!-- endregion -->
+
 </resources>

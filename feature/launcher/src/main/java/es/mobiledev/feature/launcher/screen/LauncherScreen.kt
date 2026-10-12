@@ -23,7 +23,7 @@ fun LauncherScreen(
     onLauncherFinished: () -> Unit,
 ) {
     val launcherViewModel: LauncherViewModel = hiltViewModel()
-    val uiState by launcherViewModel.getUiState().collectAsStateWithLifecycle()
+    val uiState by launcherViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiState.data.hasFinish) {
         if (uiState.data.hasFinish) {

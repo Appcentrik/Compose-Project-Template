@@ -26,6 +26,9 @@ android {
             )
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -33,6 +36,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.common)
     implementation(projects.data.source)
     implementation(projects.domain.model)
 

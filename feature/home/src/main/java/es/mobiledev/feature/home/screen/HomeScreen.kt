@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import es.mobiledev.commonandroid.theme.CPTTheme
 import es.mobiledev.commonandroid.ui.base.BaseScreen
@@ -18,15 +17,12 @@ fun HomeScreen(
     navigateToArticleDetail: (Long) -> Unit,
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
-    val uiState by viewModel.getUiState().collectAsStateWithLifecycle()
-
-    LifecycleStartEffect(Unit) {
-        viewModel.getFavoriteArticles()
-        onStopOrDispose { /* no-op */ }
-    }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     BaseScreen(
-        isLoading = uiState.isLoading,
+        status = uiState.status,
+        onRetry = viewModel::onErrorAction,
+        onErrorDismiss = viewModel::dismissError,
     ) { paddingValues ->
         HomeScreenContent(
             uiState = uiState.data,

@@ -1,5 +1,7 @@
 package es.mobiledev.cpt.ui.screen.testNavigation
 
 data class TestUiState(
-    val title: String = "Error 404...",
+    val lastAction: String = "",
+    val actionInvocations: Int = 0,
+    val snackBarsShown: Int = 0,
 )

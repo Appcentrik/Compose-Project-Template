@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.common)
     implementation(projects.domain.model)
     implementation(projects.domain.useCase)
 

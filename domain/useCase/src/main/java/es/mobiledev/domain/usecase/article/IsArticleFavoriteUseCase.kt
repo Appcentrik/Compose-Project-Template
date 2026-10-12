@@ -1,12 +1,13 @@
 package es.mobiledev.domain.usecase.article
 
+import es.mobiledev.common.response.AsyncResult
 import es.mobiledev.domain.gateway.article.ArticleGateway
 import kotlinx.coroutines.flow.Flow
 
 interface IsArticleFavoriteUseCase {
     suspend operator fun invoke(
         id: Long,
-    ): Flow<Boolean>
+    ): Flow<AsyncResult<Boolean>>
 }
 
 class IsArticleFavoriteUseCaseImpl(
@@ -14,5 +15,5 @@ class IsArticleFavoriteUseCaseImpl(
 ) : IsArticleFavoriteUseCase {
     override suspend fun invoke(
         id: Long,
-    ): Flow<Boolean> = articleGateway.isArticleFavorite(id)
+    ): Flow<AsyncResult<Boolean>> = articleGateway.isArticleFavorite(id)
 }
