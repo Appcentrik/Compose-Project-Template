@@ -2,6 +2,7 @@ name: Android CI
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -77,6 +78,7 @@ jobs:
         if: always()
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_CI }}
+          GITHUB_TOKEN: ${{ github.token }}
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_URL: ${{ github.event.pull_request.html_url }}
           COMMIT_MSG: ${{ github.event.head_commit.message }}
@@ -84,6 +86,8 @@ jobs:
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           if [ "${{ job.status }}" = "success" ]; then
             EMOJI="✅"; COLOR=3066993
+          elif [ "${{ job.status }}" = "cancelled" ]; then
+            EMOJI="🛑"; COLOR=9807270
           else
             EMOJI="❌"; COLOR=15158332
           fi
@@ -100,10 +104,26 @@ jobs:
           [ "${{ steps.build.outcome }}" = "failure" ] && FAILED="${FAILED}Build, "
           [ "${{ steps.tests.outcome }}" = "failure" ] && FAILED="${FAILED}Tests, "
           FAILED="${FAILED%, }"
-          if [ -n "$FAILED" ]; then
+          if [ "${{ job.status }}" = "cancelled" ]; then
+            BRANCH="${{ github.head_ref }}"
+            [ -z "$BRANCH" ] && BRANCH="${{ github.ref_name }}"
+            RUNS=$(curl -s -G -H "Authorization: Bearer $GITHUB_TOKEN" \
+              --data-urlencode "branch=$BRANCH" \
+              --data "per_page=30" \
+              "${{ github.api_url }}/repos/${{ github.repository }}/actions/runs")
+            LATEST=$(echo "$RUNS" | jq -r --arg wf "${{ github.workflow }}" '([.workflow_runs[] | select(.name == $wf) | .id] | max) // 0' 2>/dev/null)
+            [[ "$LATEST" =~ ^[0-9]+$ ]] || LATEST=0
+            if [ "$LATEST" -gt "${{ github.run_id }}" ]; then
+              echo "Cancelled by a newer run ($LATEST); skipping notification."
+              exit 0
+            fi
+            DESC="Pipeline cancelled"
+          elif [ "${{ job.status }}" = "success" ]; then
+            DESC="Pipeline success"
+          elif [ -n "$FAILED" ]; then
             DESC="Pipeline failed on: $FAILED"
           else
-            DESC="Pipeline success"
+            DESC="Pipeline failed"
           fi
           if [ -n "$PR_URL" ]; then
             DESC="$DESC · [Ver PR]($PR_URL)"
