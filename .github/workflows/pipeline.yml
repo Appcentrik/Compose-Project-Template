@@ -63,6 +63,16 @@ jobs:
         if: steps.config.outputs.tests == 'true'
         run: ./gradlew test --parallel --build-cache
 
+      - name: Upload test reports
+        if: always() && steps.tests.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            build/test-results/
+            build/reports/
+          retention-days: 7
+
       - name: Notify Discord
         if: always()
         env:
@@ -74,7 +84,13 @@ jobs:
           else
             EMOJI="❌"; COLOR=15158332
           fi
-          DESC="Lint: ${{ steps.lint.outcome }}\nVerify: ${{ steps.verify.outcome }}\nBuild: ${{ steps.build.outcome }}\nTests: ${{ steps.tests.outcome }}\nRama: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nAutor: ${{ github.actor }}"
+          FAILED=""
+          [ "${{ steps.lint.outcome }}" = "failure" ] && FAILED="$FAILED\n- Lint"
+          [ "${{ steps.verify.outcome }}" = "failure" ] && FAILED="$FAILED\n- Verify resources"
+          [ "${{ steps.build.outcome }}" = "failure" ] && FAILED="$FAILED\n- Build"
+          [ "${{ steps.tests.outcome }}" = "failure" ] && FAILED="$FAILED\n- Tests"
+          [ -z "$FAILED" ] && FAILED="\n- Ninguno (todo OK o saltado)"
+          DESC="Lint: ${{ steps.lint.outcome }}\nVerify: ${{ steps.verify.outcome }}\nBuild: ${{ steps.build.outcome }}\nTests: ${{ steps.tests.outcome }}\nFallidos:$FAILED\nRama: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nAutor: ${{ github.actor }}"
           PAYLOAD=$(jq -n \
             --arg title "$EMOJI Android CI ${{ job.status }}" \
             --arg url "$RUN_URL" \
