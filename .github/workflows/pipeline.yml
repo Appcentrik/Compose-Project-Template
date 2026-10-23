@@ -9,15 +9,13 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  push:
-    branches: [ "master", "develop", "feature/setup-pipeline" ]
   pull_request:
     branches: [ "master", "develop" ]
-    types: [ opened, synchronize, reopened, ready_for_review ]
+    types: [ opened, synchronize, reopened, ready_for_review, edited ]
 
 jobs:
   ci:
-    if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.draft == false && !contains(github.event.pull_request.title, 'wip')) }}
+    if: ${{ github.event.pull_request.draft == false && !contains(github.event.pull_request.title, 'wip') && (github.event.action != 'edited' || github.event.changes.title != null) }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
