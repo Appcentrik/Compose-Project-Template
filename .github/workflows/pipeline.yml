@@ -78,6 +78,7 @@ jobs:
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_CI }}
           PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
           COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
@@ -102,11 +103,18 @@ jobs:
           if [ -n "$FAILED" ]; then
             DESC="Pipeline failed on: $FAILED"
           else
-            DESC="Check success"
+            DESC="Pipeline success"
           fi
+          if [ -n "$PR_URL" ]; then
+            DESC="$DESC · [Ver PR]($PR_URL)"
+            EMBED_URL="$PR_URL"
+          else
+            EMBED_URL="$RUN_URL"
+          fi
+          DESC="$DESC · [Ver run]($RUN_URL)"
           PAYLOAD=$(jq -n \
             --arg title "$EMOJI $TITLE" \
-            --arg url "$RUN_URL" \
+            --arg url "$EMBED_URL" \
             --arg desc "$DESC" \
             --arg footer "${{ github.ref_name }} · ${GITHUB_SHA:0:7}" \
             --argjson color "$COLOR" \
