@@ -104,9 +104,9 @@ jobs:
           [ "${{ steps.build.outcome }}" = "failure" ] && FAILED="${FAILED}Build, "
           [ "${{ steps.tests.outcome }}" = "failure" ] && FAILED="${FAILED}Tests, "
           FAILED="${FAILED%, }"
+          BRANCH="${{ github.head_ref }}"
+          [ -z "$BRANCH" ] && BRANCH="${{ github.ref_name }}"
           if [ "${{ job.status }}" = "cancelled" ]; then
-            BRANCH="${{ github.head_ref }}"
-            [ -z "$BRANCH" ] && BRANCH="${{ github.ref_name }}"
             RUNS=$(curl -s -G -H "Authorization: Bearer $GITHUB_TOKEN" \
               --data-urlencode "branch=$BRANCH" \
               --data "per_page=30" \
@@ -125,11 +125,13 @@ jobs:
           else
             DESC="Pipeline failed"
           fi
+          BRANCH_URL="${{ github.server_url }}/${{ github.repository }}/tree/$BRANCH"
           if [ -n "$PR_URL" ]; then
             DESC="$DESC · [Ver PR]($PR_URL)"
             EMBED_URL="$PR_URL"
           else
-            EMBED_URL="$RUN_URL"
+            DESC="$DESC · [Ver rama]($BRANCH_URL)"
+            EMBED_URL="$BRANCH_URL"
           fi
           DESC="$DESC · [Ver run]($RUN_URL)"
           PAYLOAD=$(jq -n \
