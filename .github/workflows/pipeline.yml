@@ -77,6 +77,8 @@ jobs:
         if: always()
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_CI }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           if [ "${{ job.status }}" = "success" ]; then
@@ -84,17 +86,29 @@ jobs:
           else
             EMOJI="❌"; COLOR=15158332
           fi
+          TITLE="$PR_TITLE"
+          if [ -z "$TITLE" ]; then
+            TITLE="$COMMIT_MSG"
+          fi
+          TITLE="${TITLE%%$'\n'*}"
+          [ -z "$TITLE" ] && TITLE="${{ github.ref_name }}"
+          TITLE="${TITLE:0:250}"
           FAILED=""
-          [ "${{ steps.lint.outcome }}" = "failure" ] && FAILED="$FAILED\n- Lint"
-          [ "${{ steps.verify.outcome }}" = "failure" ] && FAILED="$FAILED\n- Verify resources"
-          [ "${{ steps.build.outcome }}" = "failure" ] && FAILED="$FAILED\n- Build"
-          [ "${{ steps.tests.outcome }}" = "failure" ] && FAILED="$FAILED\n- Tests"
-          [ -z "$FAILED" ] && FAILED="\n- Ninguno (todo OK o saltado)"
-          DESC="Lint: ${{ steps.lint.outcome }}\nVerify: ${{ steps.verify.outcome }}\nBuild: ${{ steps.build.outcome }}\nTests: ${{ steps.tests.outcome }}\nFallidos:$FAILED\nRama: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nAutor: ${{ github.actor }}"
+          [ "${{ steps.lint.outcome }}" = "failure" ] && FAILED="${FAILED}Lint, "
+          [ "${{ steps.verify.outcome }}" = "failure" ] && FAILED="${FAILED}Verify, "
+          [ "${{ steps.build.outcome }}" = "failure" ] && FAILED="${FAILED}Build, "
+          [ "${{ steps.tests.outcome }}" = "failure" ] && FAILED="${FAILED}Tests, "
+          FAILED="${FAILED%, }"
+          if [ -n "$FAILED" ]; then
+            DESC="Pipeline failed on: $FAILED"
+          else
+            DESC="Check success"
+          fi
           PAYLOAD=$(jq -n \
-            --arg title "$EMOJI Android CI ${{ job.status }}" \
+            --arg title "$EMOJI $TITLE" \
             --arg url "$RUN_URL" \
             --arg desc "$DESC" \
+            --arg footer "${{ github.ref_name }} · ${GITHUB_SHA:0:7}" \
             --argjson color "$COLOR" \
-            '{embeds:[{title:$title,description:$desc,url:$url,color:$color}]}')
+            '{embeds:[{title:$title,description:$desc,url:$url,color:$color,footer:{text:$footer}}]}')
           curl -s -H "Content-Type: application/json" -X POST "$WEBHOOK" -d "$PAYLOAD"
