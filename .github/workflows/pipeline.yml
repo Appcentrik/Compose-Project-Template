@@ -1,0 +1,84 @@
+name: Android CI
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [ "master", "develop" ]
+  pull_request:
+    branches: [ "master", "develop" ]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Read config
+        id: config
+        run: |
+          for key in build lint verify tests; do
+            val=$(jq -r ".$key" .github/ci-config.json)
+            echo "$key=$val" >> $GITHUB_OUTPUT
+          done
+
+      - name: Setup Gradle + JDK
+        id: setup
+        if: steps.config.outputs.build == 'true' || steps.config.outputs.lint == 'true' || steps.config.outputs.verify == 'true' || steps.config.outputs.tests == 'true'
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission
+        id: chmod
+        if: steps.config.outputs.build == 'true' || steps.config.outputs.lint == 'true' || steps.config.outputs.verify == 'true' || steps.config.outputs.tests == 'true'
+        run: chmod +x gradlew
+
+      - name: Lint (ktlint)
+        id: lint
+        if: steps.config.outputs.lint == 'true'
+        run: ./gradlew ktlintCheck --parallel --build-cache
+
+      - name: Verify resources
+        id: verify
+        if: steps.config.outputs.verify == 'true'
+        run: ./gradlew verifyResources --parallel --build-cache
+
+      - name: Build
+        id: build
+        if: steps.config.outputs.build == 'true'
+        run: ./gradlew assemble --parallel --build-cache
+
+      - name: Tests
+        id: tests
+        if: steps.config.outputs.tests == 'true'
+        run: ./gradlew test --parallel --build-cache
+
+      - name: Notify Discord
+        if: always()
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_CI }}
+        run: |
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if [ "${{ job.status }}" = "success" ]; then
+            EMOJI="✅"; COLOR=3066993
+          else
+            EMOJI="❌"; COLOR=15158332
+          fi
+          DESC="Lint: ${{ steps.lint.outcome }}\nVerify: ${{ steps.verify.outcome }}\nBuild: ${{ steps.build.outcome }}\nTests: ${{ steps.tests.outcome }}\nRama: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nAutor: ${{ github.actor }}"
+          PAYLOAD=$(jq -n \
+            --arg title "$EMOJI Android CI ${{ job.status }}" \
+            --arg url "$RUN_URL" \
+            --arg desc "$DESC" \
+            --argjson color "$COLOR" \
+            '{embeds:[{title:$title,description:$desc,url:$url,color:$color}]}')
+          curl -s -H "Content-Type: application/json" -X POST "$WEBHOOK" -d "$PAYLOAD"

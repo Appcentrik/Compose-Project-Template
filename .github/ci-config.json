@@ -1,0 +1,6 @@
+{
+  "build": true,
+  "lint": true,
+  "verifyResources": true,
+  "tests": false
+}
